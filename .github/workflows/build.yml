@@ -14,7 +14,7 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Install build tools
         run: |
           sudo apt-get update
@@ -29,7 +29,7 @@ jobs:
           unzip -p dist/q2-dino-runner.zip .dino-runner/q2app | grep -Fx 'game=1'
           test -s dist/.dino-runner/LICENSE.txt
           file dist/.dino-runner/q2-dino-runner | grep -E 'ELF 32-bit LSB.*MIPS'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: q2-dino-runner-card-app
           path: dist/q2-dino-runner.zip
@@ -42,7 +42,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           name: q2-dino-runner-card-app
           path: dist
