@@ -1,0 +1,60 @@
+name: Build and release Dino Runner
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang lld make gcc python3 python3-pil zip unzip
+      - name: Test and build
+        run: |
+          make check
+          make
+      - name: Verify install package
+        run: |
+          unzip -t dist/q2-dino-runner.zip
+          unzip -p dist/q2-dino-runner.zip .dino-runner/q2app | grep -Fx 'game=1'
+          test -s dist/.dino-runner/LICENSE.txt
+          file dist/.dino-runner/q2-dino-runner | grep -E 'ELF 32-bit LSB.*MIPS'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: q2-dino-runner-card-app
+          path: dist/q2-dino-runner.zip
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: q2-dino-runner-card-app
+          path: dist
+      - name: Publish release ZIP
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" dist/q2-dino-runner.zip --clobber
+          else
+            gh release create "$RELEASE_TAG" dist/q2-dino-runner.zip \
+              --verify-tag --generate-notes --title "$RELEASE_TAG"
+          fi
