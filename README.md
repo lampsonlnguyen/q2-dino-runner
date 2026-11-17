@@ -34,4 +34,4 @@ Use `dist/q2-dino-runner.zip` to install the build. The MIPS binary draws sprite
 
 The game engine is from [AKJ7/dinorunner](https://github.com/AKJ7/dinorunner/tree/c6be2cb66d8de1480bd797e4f3ea2ab2769248f0). The original Dino artwork comes from Chromium, via the upstream demo’s sprite sheet. The Q2 platform code follows [q2-2048](https://github.com/lampsonlnguyen/q2-2048) and [Buddy](https://github.com/DiamondBond/q2-fidget).
 
-See [LICENSE](LICENSE), [the Buddy notice](LICENSE-Buddy.txt), and [the Chromium notice](assets/LICENSE-Chromium.txt).
+Code is distributed under GNU GPL version 3; see [LICENSE](LICENSE). Imported engine files retain their original copyright years and identify [AKJ7/dinorunner](https://github.com/AKJ7/dinorunner) as their upstream. Q2 integration changes are maintained in this repository. The Chromium artwork has its own [notice](assets/LICENSE-Chromium.txt). Both license texts are included in the install package.

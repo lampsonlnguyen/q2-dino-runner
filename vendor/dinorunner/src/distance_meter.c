@@ -1,9 +1,11 @@
 /**
  * @file distance_meter.c
  * 
- * @copyright Copyright (C) 2025 - All Rights Reserved 
- *  You may use, distribute and modify this code under the 
- *  terms of the GPL license.
+ * @copyright Copyright (C) 2025
+ * Upstream: AKJ7/dinorunner; original copyright year retained.
+ * SPDX-License-Identifier: GPL-3.0-only
+ * You may use, distribute and modify this code under the GNU General
+ * Public License, version 3. See LICENSE in the repository root.
  */
 
 #include "dinorunner.h"

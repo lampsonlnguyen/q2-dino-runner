@@ -33,7 +33,7 @@ $(CARD)/q2app: q2app Makefile
 	mkdir -p $(@D)
 	tr -d '\r' < $< > $@
 
-$(CARD)/LICENSE.txt: LICENSE LICENSE-Buddy.txt assets/LICENSE-Chromium.txt
+$(CARD)/LICENSE.txt: LICENSE assets/LICENSE-Chromium.txt
 	mkdir -p $(@D)
 	cat $^ > $@
 

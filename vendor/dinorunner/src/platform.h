@@ -2,9 +2,11 @@
  * @file platform.h
  * @brief Calls into the application's callbacks, see struct dinorunner_callbacks_s
  *
- * @copyright Copyright (C) 2026 - All Rights Reserved
- *  You may use, distribute and modify this code under the
- *  terms of the GPL license.
+ * @copyright Copyright (C) 2026
+ * Upstream: AKJ7/dinorunner; original copyright year retained.
+ * SPDX-License-Identifier: GPL-3.0-only
+ * You may use, distribute and modify this code under the GNU General
+ * Public License, version 3. See LICENSE in the repository root.
  */
 
 #ifndef DINORUNNER_PLATFORM_H
