@@ -156,7 +156,7 @@ int q2_main(void)
         unsigned now = now_ms();
         int remaining = (int)(deadline - now);
         int animated = app_animated(&app);
-        if ((animated && remaining <= 0) || (!animated && redraw)) {
+        if ((animated && remaining <= 0) || redraw) {
             unsigned elapsed = now - previous;
             if (elapsed > 2 * FRAME_MS)
                 elapsed = 2 * FRAME_MS;
