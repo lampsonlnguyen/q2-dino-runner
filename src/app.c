@@ -180,19 +180,35 @@ int app_input(struct app *app, const char *message)
         return 0;
     const char *args = message + 4;
     int a = decimal(&args);
-    if (message[0] == 'k' && message[2] == 'u') {
-        if (a == CENTRE)
-            jump(app);
-        else if (a == RETURN) {
-            if (app->paused)
-                app->quit = 1;
-            else {
-                if (app->touch)
-                    dinorunner_onkeynone(&app->game);
-                app->touch = 0;
-                app->paused = 1;
+    if (message[0] == 'k') {
+        if (a == CENTRE) {
+            if (message[2] == 'd') {
+                if (app->center_down)
+                    return 0;
+                app->center_down = 1;
+                jump(app); /* Jump on press, not release. */
+                return 1;
             }
-        } else return 0;
+            if (message[2] == 'u') {
+                if (app->center_down) {
+                    app->center_down = 0;
+                    return 0; /* Already handled this press. */
+                }
+                jump(app); /* Fallback for release-only input sources. */
+                return 1;
+            }
+            return 0;
+        }
+        if (a != RETURN || message[2] != 'u')
+            return 0;
+        if (app->paused)
+            app->quit = 1;
+        else {
+            if (app->touch)
+                dinorunner_onkeynone(&app->game);
+            app->touch = 0;
+            app->paused = 1;
+        }
         return 1;
     }
     if (message[0] != 't')
