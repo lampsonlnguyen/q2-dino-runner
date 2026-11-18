@@ -11,7 +11,7 @@ Play the Chrome-style dinosaur runner on your Shanling Q2. Jump over cacti, duck
 
 | Control | Action |
 | --- | --- |
-| Centre | Start, jump, restart after a crash, or resume |
+| Centre | Start, jump, restart after a crash, or resume immediately on press (no release delay) |
 | Tap the playfield | Jump |
 | Hold the lower part of the touchscreen | Duck, or drop faster while jumping |
 | Return | Pause. Press Return again while paused to quit |
