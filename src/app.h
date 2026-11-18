@@ -11,7 +11,7 @@ struct app {
     u32 *page;
     unsigned stride;
     unsigned long clock, best;
-    int paused, quit, touch, save_pending;
+    int paused, quit, touch, save_pending, center_down;
 };
 
 int app_init(struct app *app, unsigned long best);
