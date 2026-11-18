@@ -22,7 +22,11 @@ int main(void)
     }
     assert(ink > 1000 && !app_animated(&app));
 
-    assert(app_input(&app, "k u 218") && app.game.trex.jumping && app_animated(&app));
+    /* Press must jump immediately; release must not jump again. */
+    assert(app_input(&app, "k d 218") && app.game.trex.jumping && app_animated(&app));
+    assert(!app_input(&app, "k d 218")); /* Ignore key repeat. */
+    assert(!app_input(&app, "k u 218"));
+    assert(app.game.trex.jump_count == 1);
     int ground = app.game.trex.y_pos;
     for (int i = 0; i < 5; ++i)
         app_frame(&app, pixels, STRIDE, 17);
@@ -31,7 +35,8 @@ int main(void)
     unsigned long paused_at = app.clock;
     app_frame(&app, pixels, STRIDE, 1000);
     assert(app.clock == paused_at && !app_animated(&app));
-    assert(app_input(&app, "k u 218") && !app.paused);
+    assert(app_input(&app, "k d 218") && !app.paused);
+    assert(!app_input(&app, "k u 218"));
 
     for (int i = 0; app.game.trex.jumping && i < 120; ++i)
         app_frame(&app, pixels, STRIDE, 17);
@@ -42,11 +47,17 @@ int main(void)
         app_frame(&app, pixels, STRIDE, 17);
     assert(app.game.crashed && app.save_pending && app.best && !app_animated(&app));
     unsigned long best = app.best;
-    assert(app_input(&app, "k u 218") && !app.game.crashed && app_animated(&app));
+    assert(app_input(&app, "k d 218") && !app.game.crashed && app_animated(&app));
+    assert(!app_input(&app, "k u 218"));
     assert(app.best == best);
     assert(app_input(&app, "k u 170") && app.paused);
     assert(app_input(&app, "k u 170") && app.quit);
     assert(app_init(&app, best));
     assert(app.game.distance_meter.high_score == best);
+    /* Release-only firmware/emulators still work. */
+    assert(app_init(&app, best));
+    assert(app_input(&app, "k u 218") && app.game.trex.jumping);
+    assert(!app.center_down);
+    assert(app_init(&app, best));
     puts("Dino Runner rendering and gameplay checks passed");
 }
