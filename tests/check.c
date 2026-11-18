@@ -24,9 +24,12 @@ int main(void)
 
     /* Press must jump immediately; release must not jump again. */
     assert(app_input(&app, "k d 218") && app.game.trex.jumping && app_animated(&app));
+    float takeoff_velocity = app.game.trex.jump_velocity;
     assert(!app_input(&app, "k d 218")); /* Ignore key repeat. */
     assert(!app_input(&app, "k u 218"));
-    assert(app.game.trex.jump_count == 1);
+    assert(app.game.trex.jumping && app.game.trex.jump_velocity == takeoff_velocity);
+    /* The engine counts completed jumps at landing, not at takeoff. */
+    assert(app.game.trex.jump_count == 0);
     int ground = app.game.trex.y_pos;
     for (int i = 0; i < 5; ++i)
         app_frame(&app, pixels, STRIDE, 17);
@@ -40,7 +43,7 @@ int main(void)
 
     for (int i = 0; app.game.trex.jumping && i < 120; ++i)
         app_frame(&app, pixels, STRIDE, 17);
-    assert(!app.game.trex.jumping);
+    assert(!app.game.trex.jumping && app.game.trex.jump_count == 1);
     assert(app_input(&app, "t d 185 285") && app.game.trex.ducking);
     assert(app_input(&app, "t u 185 285") && !app.game.trex.ducking);
     for (int i = 0; !app.game.crashed && i < 1200; ++i)
