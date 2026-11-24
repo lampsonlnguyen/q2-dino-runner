@@ -30,6 +30,41 @@ static const struct rect sprites[] = {
 };
 #undef SPRITE
 
+/* Find the horizontal ink row inside the Chrome horizon sprite. */
+static int horizon_ink_row(void)
+{
+    const struct rect horizon = sprites[DINORUNNER_SPRITE_HORIZON1];
+    int best_row = 0, best_ink = -1;
+    for (int y = 0; y < horizon.h; ++y) {
+        int ink = 0;
+        for (int x = 0; x < horizon.w; ++x) {
+            const unsigned index = (unsigned)(horizon.y + y) * SHEET_WIDTH +
+                                   (unsigned)(horizon.x + x);
+            ink += ((sheet[index / 2] >> (4 * (index % 2))) & 15u) != 0;
+        }
+        if (ink > best_ink) {
+            best_ink = ink;
+            best_row = y;
+        }
+    }
+    return best_row;
+}
+
+/* Align artwork to the inked ground, without altering engine collision math. */
+int app_sprite_y(const struct app *app, enum dinorunner_sprite_e sprite, int engine_y)
+{
+    if ((unsigned)sprite >= sizeof sprites / sizeof sprites[0])
+        return engine_y;
+    const int ground = app->game.horizon.horizon_line.y_pos + app->ground_line_row;
+    if (sprite >= DINORUNNER_SPRITE_TREX_STANDING1 &&
+        sprite <= DINORUNNER_SPRITE_TREX_JUMPING)
+        return engine_y + ground - (app->game.trex.ground_y_pos + DINORUNNER_CONFIG_TREX_HEIGHT);
+    if (sprite >= DINORUNNER_SPRITE_CACTUSLARGE1 &&
+        sprite <= DINORUNNER_SPRITE_CACTUSSMALL3)
+        return ground - sprites[sprite].h;
+    return engine_y;
+}
+
 static u32 *pixel(const struct app *app, int x, int y)
 {
     return app->page + x * app->stride + HEIGHT - 1 - y;
@@ -68,7 +103,7 @@ static unsigned char draw(enum dinorunner_sprite_e sprite, const struct pos_s *p
     if ((unsigned)sprite >= sizeof sprites / sizeof sprites[0])
         return 0;
     struct rect source = sprites[sprite];
-    int x0 = pos->x, y0 = pos->y + SCENE_Y;
+    int x0 = pos->x, y0 = app_sprite_y(app, sprite, pos->y) + SCENE_Y;
     int left = x0 < 0 ? -x0 : 0;
     int right = x0 + source.w > WIDTH ? WIDTH - x0 : source.w;
     int top = y0 < SCENE_Y ? SCENE_Y - y0 : 0;
@@ -144,6 +179,7 @@ static unsigned char write_score(unsigned long best, void *context)
 int app_init(struct app *app, unsigned long best)
 {
     *app = (struct app){.best = best};
+    app->ground_line_row = horizon_ink_row();
     const struct dimension_s dimensions = {WIDTH, SCENE_HEIGHT};
     const struct dinorunner_callbacks_s callbacks = {
         .gettimestamp = timestamp, .clearcanvas = clear, .draw = draw,
