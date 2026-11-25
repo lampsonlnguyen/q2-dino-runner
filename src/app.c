@@ -51,24 +51,26 @@ static int horizon_ink_row(void)
     return best_row;
 }
 
-/* Place the visible horizon at the T-Rex's *engine* ground level.
- * The engine's horizon starts at scene y=150, five pixels below the
- * standing T-Rex's feet (y=145). Moving the T-Rex down to meet that line
- * caused the reported floating/low-ground appearance. Keep the dinosaur
- * and its jump/collision coordinates unchanged; raise the horizon ink
- * instead. Cacti sit on the same line with a small visual-only offset. */
+/* Chrome Dino draws its horizon through the T-Rex's ankles, not at
+ * the bottom of the feet. Preserve the engine's T-Rex, jump and collision
+ * coordinates; render the horizon six pixels above the bottom of the feet.
+ * Cacti keep their original bottom baseline so their bases also overlap
+ * the line instead of floating above it. */
+enum { GROUND_OVERLAP = 6 };
+
 int app_sprite_y(const struct app *app, enum dinorunner_sprite_e sprite, int engine_y)
 {
     if ((unsigned)sprite >= sizeof sprites / sizeof sprites[0])
         return engine_y;
-    const int ground = app->game.trex.ground_y_pos + DINORUNNER_CONFIG_TREX_HEIGHT;
+    const int feet = app->game.trex.ground_y_pos + DINORUNNER_CONFIG_TREX_HEIGHT;
+    const int line = feet - GROUND_OVERLAP;
     if (sprite == DINORUNNER_SPRITE_HORIZON1 ||
         sprite == DINORUNNER_SPRITE_HORIZON2)
-        return engine_y + ground - app->game.horizon.horizon_line.y_pos -
+        return engine_y + line - app->game.horizon.horizon_line.y_pos -
                app->ground_line_row;
     if (sprite >= DINORUNNER_SPRITE_CACTUSLARGE1 &&
         sprite <= DINORUNNER_SPRITE_CACTUSSMALL3)
-        return ground - sprites[sprite].h;
+        return feet - sprites[sprite].h;
     return engine_y;
 }
 
