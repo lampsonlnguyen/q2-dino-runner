@@ -3,7 +3,7 @@
 
 #include "dinorunner.h"
 
-enum { WIDTH = 375, HEIGHT = 320 };
+enum { WIDTH = 375, HEIGHT = 320, SCENE_Y = 58, SCENE_HEIGHT = 150 };
 typedef unsigned int u32;
 
 struct app {
