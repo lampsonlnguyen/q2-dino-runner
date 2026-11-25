@@ -280,7 +280,9 @@ void app_frame(struct app *app, u32 *page, unsigned stride, unsigned elapsed_ms)
     if (!app->paused)
         app->clock += elapsed_ms;
     dinorunner_update(&app->game);
-    label(app, app->paused ? "PAUSED" : "DINO RUNNER", 29, 3);
+    /* Match the clean Chrome Dino gameplay view; show a heading only when paused. */
+    if (app->paused)
+        label(app, "PAUSED", 29, 3);
     if (app->paused) {
         label(app, "CENTRE RESUME", 267, 2);
         label(app, "RETURN QUIT", 289, 2);
