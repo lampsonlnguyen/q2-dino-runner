@@ -10,17 +10,32 @@ int main(void)
 {
     struct app app;
     assert(app_init(&app, 0));
-    /* Issue #1: both grounded sprites must touch the horizon ink row. */
-    const int ground = app.game.horizon.horizon_line.y_pos + app.ground_line_row;
+    /* The visible horizon must meet the original T-Rex ground level.
+     * Keep the dinosaur's engine position untouched, including jumping. */
+    const int ground_line = app.game.trex.ground_y_pos + DINORUNNER_CONFIG_TREX_HEIGHT;
     assert(app.ground_line_row >= 0 && app.ground_line_row < 12);
+    assert(ground_line == 145);
+    assert(app_sprite_y(&app, DINORUNNER_SPRITE_HORIZON1,
+                        app.game.horizon.horizon_line.y_pos) +
+               app.ground_line_row == ground_line);
+    assert(app_sprite_y(&app, DINORUNNER_SPRITE_HORIZON2,
+                        app.game.horizon.horizon_line.y_pos) +
+               app.ground_line_row == ground_line);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_TREX_STANDING1,
-                        app.game.trex.ground_y_pos) + 47 == ground);
+                        app.game.trex.ground_y_pos) == app.game.trex.ground_y_pos);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_TREX_DUCKING1,
-                        app.game.trex.ground_y_pos) + 47 == ground);
-    assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSSMALL1, 105) + 35 == ground);
-    assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSSMALL3, 105) + 35 == ground);
-    assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSLARGE1, 90) + 50 == ground);
-    assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSLARGE3, 90) + 50 == ground);
+                        app.game.trex.ground_y_pos) == app.game.trex.ground_y_pos);
+    assert(app_sprite_y(&app, DINORUNNER_SPRITE_TREX_JUMPING,
+                        app.game.trex.ground_y_pos - 12) ==
+               app.game.trex.ground_y_pos - 12);
+    assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSSMALL1, 105) + 35 ==
+           ground_line);
+    assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSSMALL3, 105) + 35 ==
+           ground_line);
+    assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSLARGE1, 90) + 50 ==
+           ground_line);
+    assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSLARGE3, 90) + 50 ==
+           ground_line);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_PTERODACTYL1, 50) == 50);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_CLOUD, 30) == 30);
     app_frame(&app, pixels, STRIDE, 0);
