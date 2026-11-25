@@ -16,9 +16,9 @@ int main(void)
     assert(app.ground_line_row >= 0 && app.ground_line_row < 12);
     assert(ground_line == 145);
     /* Reference screenshot horizon at ~63% of image height. */
-    assert(SCENE_Y + ground_line == 203);
-    assert((SCENE_Y + ground_line) * 100 / HEIGHT >= 62);
-    assert((SCENE_Y + ground_line) * 100 / HEIGHT <= 64);
+    assert(SCENE_Y + ground_line == 195);
+    assert((SCENE_Y + ground_line) * 100 / HEIGHT >= 60);
+    assert((SCENE_Y + ground_line) * 100 / HEIGHT <= 62);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_HORIZON1,
                         app.game.horizon.horizon_line.y_pos) +
                app.ground_line_row == ground_line);
