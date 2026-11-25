@@ -15,6 +15,10 @@ int main(void)
     const int ground_line = app.game.trex.ground_y_pos + DINORUNNER_CONFIG_TREX_HEIGHT;
     assert(app.ground_line_row >= 0 && app.ground_line_row < 12);
     assert(ground_line == 145);
+    /* Reference screenshot horizon at ~63% of image height. */
+    assert(SCENE_Y + ground_line == 203);
+    assert((SCENE_Y + ground_line) * 100 / HEIGHT >= 62);
+    assert((SCENE_Y + ground_line) * 100 / HEIGHT <= 64);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_HORIZON1,
                         app.game.horizon.horizon_line.y_pos) +
                app.ground_line_row == ground_line);
