@@ -2,7 +2,8 @@
 #include "app.h"
 #include "sprites.inc"
 
-enum { SCENE_Y = 78, SCENE_HEIGHT = 150, CENTRE = 218, RETURN = 170 };
+/* Reference Chrome Dino horizon: about 63% down the Q2 landscape display. */
+enum { CENTRE = 218, RETURN = 170 };
 struct rect { int x, y, w, h; };
 
 /* The sprite coordinates from Dino Runner's SDL demo, in engine order. */
