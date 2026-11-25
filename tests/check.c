@@ -10,15 +10,13 @@ int main(void)
 {
     struct app app;
     assert(app_init(&app, 0));
-    /* The visible horizon must meet the original T-Rex ground level.
-     * Keep the dinosaur's engine position untouched, including jumping. */
-    const int ground_line = app.game.trex.ground_y_pos + DINORUNNER_CONFIG_TREX_HEIGHT;
+    /* The horizon crosses the lower legs, six pixels above the feet. */
+    const int feet = app.game.trex.ground_y_pos + DINORUNNER_CONFIG_TREX_HEIGHT;
+    const int ground_line = feet - 6;
     assert(app.ground_line_row >= 0 && app.ground_line_row < 12);
-    assert(ground_line == 145);
-    /* Reference screenshot horizon at ~63% of image height. */
-    assert(SCENE_Y + ground_line == 195);
-    assert((SCENE_Y + ground_line) * 100 / HEIGHT >= 60);
-    assert((SCENE_Y + ground_line) * 100 / HEIGHT <= 62);
+    assert(feet == 145);
+    assert(SCENE_Y == 50);
+    assert(SCENE_Y + ground_line == 189);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_HORIZON1,
                         app.game.horizon.horizon_line.y_pos) +
                app.ground_line_row == ground_line);
@@ -33,13 +31,13 @@ int main(void)
                         app.game.trex.ground_y_pos - 12) ==
                app.game.trex.ground_y_pos - 12);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSSMALL1, 105) + 35 ==
-           ground_line);
+           ground_line + 6);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSSMALL3, 105) + 35 ==
-           ground_line);
+           ground_line + 6);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSLARGE1, 90) + 50 ==
-           ground_line);
+           ground_line + 6);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_CACTUSLARGE3, 90) + 50 ==
-           ground_line);
+           ground_line + 6);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_PTERODACTYL1, 50) == 50);
     assert(app_sprite_y(&app, DINORUNNER_SPRITE_CLOUD, 30) == 30);
     app_frame(&app, pixels, STRIDE, 0);
