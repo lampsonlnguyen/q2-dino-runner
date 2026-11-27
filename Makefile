@@ -37,7 +37,11 @@ $(CARD)/LICENSE.txt: LICENSE assets/LICENSE-Chromium.txt
 	mkdir -p $(@D)
 	cat $^ > $@
 
-dist/q2-dino-runner.zip: $(CARD)/q2-dino-runner $(CARD)/q2app $(CARD)/LICENSE.txt
+$(CARD)/%.png: %.png
+	mkdir -p $(@D)
+	cp $< $@
+
+dist/q2-dino-runner.zip: $(CARD)/q2-dino-runner $(CARD)/q2app $(CARD)/LICENSE.txt $(CARD)/icon.png $(CARD)/icon-40.png $(CARD)/pane.png
 	cd dist && rm -f q2-dino-runner.zip && zip -q q2-dino-runner.zip $(patsubst dist/%,%,$^)
 
 build/check: tests/check.c $(SOURCES) $(HEADERS) build/sprites.inc

@@ -26,6 +26,12 @@ jobs:
       - name: Verify install package
         run: |
           unzip -t dist/q2-dino-runner.zip
+          for icon in icon.png icon-40.png pane.png; do
+            unzip -Z1 dist/q2-dino-runner.zip | grep -Fx ".dino-runner/$icon"
+          done
+          file dist/.dino-runner/icon.png | grep -F '52 x 52'
+          file dist/.dino-runner/icon-40.png | grep -F '40 x 40'
+          file dist/.dino-runner/pane.png | grep -F '96 x 96'
           unzip -p dist/q2-dino-runner.zip .dino-runner/q2app | grep -Fx 'game=1'
           test -s dist/.dino-runner/LICENSE.txt
           file dist/.dino-runner/q2-dino-runner | grep -E 'ELF 32-bit LSB.*MIPS'
